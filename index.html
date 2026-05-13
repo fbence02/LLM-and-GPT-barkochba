@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Barkochba</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div class="game-card">
+        <h2>Szemantikus Barkochba</h2>
+        <div id="hintBox"></div>
+        <input type="text" id="input" placeholder="Tippelj egy szót...">
+        <button class="btn-guess" onclick="sendGuess()">Guess</button>
+        <button class="btn-hint" onclick="askForHint()">Gemini help</button>
+        <div class="history" id="history"></div>
+    </div>
+</body>
+
+</html>
