@@ -25,16 +25,33 @@ async function sendGuess() {
 
 async function askForHint() {
     const hintBox = document.getElementById('hintBox');
-    hintBox.innerText = "Gondolkodik...";
+    hintBox.innerText = "Thinking...";
     try {
         const res = await fetch('http://127.0.0.1:5000/hint');
         const data = await res.json();
         if (data.error) {
-            hintBox.innerText = "Hiba: " + (data.details || data.error);
+            hintBox.innerText = "Error: " + (data.details || data.error);
         } else {
             hintBox.innerText = data.hint;
         }
     } catch (err) {
-        hintBox.innerText = "Szerver nem elérhető.";
+        hintBox.innerText = "Server is unreachable.";
     }
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await fetch('http://127.0.0.1:5000/reset', { method: 'POST' });
+    } catch (err) {
+        console.error("Could not reset the server:", err);
+    }
+
+    const inputField = document.getElementById('input');
+    if (inputField) {
+        inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendGuess();
+            }
+        });
+    }
+});
