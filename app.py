@@ -23,8 +23,8 @@ words = ["oroszlán", "teknős", "pillangó", "elefánt", "delfin", "sas", "rók
     "csokoládé", "kenyér", "ananász", "sajt", "paradicsom", "kávé", "fagylalt", "szalonna", "méz", "tök",
     "tengeralattjáró", "helikopter", "kerékpár", "rakéta", "laptop", "robot", "telefon", "televízió", "roller", "léghajó"]
 
-random_idx = random.randint(0, len(words) - 1)
-TARGET_WORD = words[random_idx].lower()
+random = random.randint(0, len(words) - 1)
+TARGET_WORD = words[random].lower()
 
 _cached_hint = None
 
