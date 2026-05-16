@@ -46,6 +46,11 @@ button {
     color: #0f172a;
 }
 
+.btn-new-game {
+    background: #00ff00;
+    color: #0f172a;
+}
+
 .history {
     margin-top: 20px;
     max-height: 200px;

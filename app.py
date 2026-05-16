@@ -1,4 +1,5 @@
 import os
+import random
 import google.generativeai as genai
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -22,7 +23,8 @@ words = ["oroszlán", "teknős", "pillangó", "elefánt", "delfin", "sas", "rók
     "csokoládé", "kenyér", "ananász", "sajt", "paradicsom", "kávé", "fagylalt", "szalonna", "méz", "tök",
     "tengeralattjáró", "helikopter", "kerékpár", "rakéta", "laptop", "robot", "telefon", "televízió", "roller", "léghajó"]
 
-TARGET_WORD = np.random.choice(words).lower();
+random_idx = random.randint(0, len(words) - 1)
+TARGET_WORD = words[random_idx].lower()
 
 _cached_hint = None
 
@@ -71,6 +73,20 @@ def guess():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@app.route('/newgame', methods=['POST'])
+def new_game():
+    global TARGET_WORD, target_vec, _cached_hint, startup_error
+    random_idx = random.randint(0, len(words) - 1)
+    TARGET_WORD = words[random_idx].lower()
+    _cached_hint = None
+    try:
+        target_vec = get_embedding(TARGET_WORD)
+        startup_error = None
+    except Exception as e:
+        startup_error = str(e)
+        target_vec = None
+    return jsonify({"success": True})
 
 @app.route('/hint', methods=['GET'])
 def get_hint():

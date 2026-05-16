@@ -20,12 +20,12 @@ async function sendGuess() {
     const html = `<div class="guess"><span>${data.word}</span><span class="${color}">${data.score}%</span></div>`;
     document.getElementById('history').innerHTML = html + document.getElementById('history').innerHTML;
 
-    if (data.win) alert("NYERTÉL!");
+    if (data.win) alert("YOU WIN!!!");
 }
 
 async function askForHint() {
     const hintBox = document.getElementById('hintBox');
-    hintBox.innerText = "Gondolkodik...";
+    hintBox.innerText = "Thinking...";
     try {
         const res = await fetch('http://127.0.0.1:5000/hint');
         const data = await res.json();
@@ -35,6 +35,17 @@ async function askForHint() {
             hintBox.innerText = data.hint;
         }
     } catch (err) {
-        hintBox.innerText = "Szerver nem elérhető.";
+        hintBox.innerText = "Server is unreachable.";
+    }
+}
+
+async function startNewGame() {
+    try {
+        await fetch('http://127.0.0.1:5000/newgame', { method: 'POST' });
+        document.getElementById('history').innerHTML = '';
+        document.getElementById('hintBox').innerText = '';
+        document.getElementById('input').value = '';
+    } catch (err) {
+        alert("Server is unreachable.");
     }
 }
