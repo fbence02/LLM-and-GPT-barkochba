@@ -47,6 +47,21 @@ except Exception as e:
     print(f"Error in embedding the word '{TARGET_WORD}': {startup_error}")
     target_vec = None
 
+@app.route('/reset', methods=['POST'])
+def reset_game():
+    global TARGET_WORD, target_vec, _cached_hint, startup_error
+    TARGET_WORD = np.random.choice(words).lower()
+    _cached_hint = None
+    startup_error = None
+    try:
+        target_vec = get_embedding(TARGET_WORD)
+        return jsonify({"message": "New word generated!"}), 200
+    except Exception as e:
+        startup_error = str(e)
+        print(f"Error in embedding the word '{TARGET_WORD}': {startup_error}")
+        target_vec = None
+        return jsonify({"error": startup_error}), 500
+
 @app.route('/guess', methods=['POST'])
 def guess():
     user_input = request.json.get('word', '').lower().strip()
@@ -96,7 +111,7 @@ def get_hint():
 
     try:
         model = genai.GenerativeModel('gemini-2.5-flash')
-        prompt = f"Egy barkochba játékhoz adj maximum 2 mondatos, kitalálandó szót nem tartalmazó segítséget a következő szóhoz: '{TARGET_WORD}', a segítséggel is nehezen kitalálható legyen."
+        prompt = f"Egy barkochba játékhoz adj maximum 2 mondatos, kitalálandó szót nem tartalmazó segítséget a következő szóhoz: '{TARGET_WORD}', a segítséggel is nehezen kitalálható legyen. Csak a mondatot írd le, semmi mást!"
         response = model.generate_content(prompt)
         _cached_hint = response.text
         return jsonify({"hint": _cached_hint})
@@ -105,4 +120,4 @@ def get_hint():
         return jsonify({"error": "Couldn't generate a hint at this time.", "details": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, debug=True)

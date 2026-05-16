@@ -30,7 +30,7 @@ async function askForHint() {
         const res = await fetch('http://127.0.0.1:5000/hint');
         const data = await res.json();
         if (data.error) {
-            hintBox.innerText = "Hiba: " + (data.details || data.error);
+            hintBox.innerText = "Error: " + (data.details || data.error);
         } else {
             hintBox.innerText = data.hint;
         }
@@ -49,3 +49,20 @@ async function startNewGame() {
         alert("Server is unreachable.");
     }
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        await fetch('http://127.0.0.1:5000/reset', { method: 'POST' });
+    } catch (err) {
+        console.error("Could not reset the server:", err);
+    }
+
+    const inputField = document.getElementById('input');
+    if (inputField) {
+        inputField.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendGuess();
+            }
+        });
+    }
+});
